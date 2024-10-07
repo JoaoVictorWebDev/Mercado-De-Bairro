@@ -9,7 +9,6 @@ namespace SuperMarket.Business.EnumClass
 {
     public enum RoleEnum
     {
-        
         Manager,
         Security,
         Butcher,
