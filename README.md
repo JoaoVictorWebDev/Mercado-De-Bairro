@@ -7,7 +7,6 @@ This project is a SuperMarket Management System developed in C# that allows user
 - Adding products with details such as price, expiration date, and stock quantity.
 - Managing employee roles.
 - Validating CPF (Brazilian ID number).
-- Handling perishable and non-perishable products.
 - Calculating final prices with discounts.
 
 ## Table of Contents
