@@ -1,2 +1,11 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using SuperMarket.Business;
+
+
+class Program
+{
+    public static void Main(String[] args)
+    {
+        Employee employee = new Employee();
+        employee.ShowDisponibleRoles();
+    }
+}
