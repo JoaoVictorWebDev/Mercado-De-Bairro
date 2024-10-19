@@ -75,7 +75,7 @@ public class ProductController : ControllerBase
         _context.SaveChanges();
 
         var insertproductsDTO = new ProductsDTO
-        {
+        {         
             ProductID = products.ProductID,
             ProductCategory = products.ProductCategory,
             ProductName = products.ProductName,
