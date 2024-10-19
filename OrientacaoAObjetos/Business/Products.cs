@@ -75,5 +75,10 @@ namespace SuperMarket.Business
             
         }
 
+        public void registerProduct()
+        {
+
+        }
+
     }
 }

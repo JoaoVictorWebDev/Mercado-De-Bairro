@@ -33,7 +33,7 @@ namespace SuperMarket.Business
         public bool isValidCPF(string CPF)
         {
             if(CPF.Length >= 11 || CPF.Length <= 11 )
-            {
+             
                 return true;
             }
             else
