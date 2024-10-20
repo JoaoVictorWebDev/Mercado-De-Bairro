@@ -8,10 +8,10 @@ namespace SuperMarket.Core.Enums
 {
     public enum ProductCategoryEnum
     {
-            Food, 
-            Cleaning, 
-            ColdCuts, 
-            CannedGoods
+        Food = 1,
+        Cleaning = 2,
+        ColdCuts = 3,
+        CannedGoods = 4
 
     }
 }

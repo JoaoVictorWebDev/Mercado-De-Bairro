@@ -1,8 +1,10 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SuperMarket.Core.Domain.DTO;
 using SuperMarket.Core.Entities;
 using SuperMarket.Data.Contexts;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SuperMarket.API.Controllers;
 
@@ -11,23 +13,18 @@ namespace SuperMarket.API.Controllers;
 public class ProductController : ControllerBase
 {
     private readonly ApplicationDBContext _context;
+    private readonly IMapper _mapper;
 
-    public ProductController(ApplicationDBContext context)
+    public ProductController(ApplicationDBContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
     [HttpGet("/allProducts")]
     public IActionResult GetAll() 
     {
         var products = _context.Products.ToList();
-        var productsDTO = products.Select(products => new ProductsDTO()
-        {
-            ProductID = products.ProductID,
-            ProductCategory = products.ProductCategory,
-            ProductName = products.ProductName,
-            Supplier = products.Supplier,
-            ExpirationDate = products.ExpirationDate,
-        }).ToList();
+        var productsDTO = _mapper.Map<List<ProductsDTO>>(products);
         return Ok(new { Message = "Here's your List!", Data = productsDTO });
     }
 
@@ -40,15 +37,8 @@ public class ProductController : ControllerBase
         {
             return NotFound(new { Message = "Product Not Found!" });
         }
-        var productDTO = new ProductsDTO
-        {
-            ProductID = product.ProductID,
-            ProductName = product.ProductName,
-            ProductCategory = product.ProductCategory,
-            ExpirationDate = product.ExpirationDate,
-            Supplier = product.Supplier
-        };
-        return Ok(new { Message = "Product Found", Data = productDTO });
+        var GetProductsByID = _mapper.Map<ProductsDTO>(product);
+        return Ok(new { Message = "Product Found", Data = GetProductsByID });
     }
 
     [HttpDelete("/deleteById{id}")]
@@ -60,29 +50,49 @@ public class ProductController : ControllerBase
         return Ok(new { Message = "Product Has been Deleted!" , Data = products});
     }
 
+    [HttpDelete("/deleteAll")]
+    public async Task<IActionResult> DeleteAll()
+    {
+        var products = _context.Products.ToList();
+
+        if(products.Count == 0)
+        {
+            return NotFound(new { Message = "No Products found to delete" });
+        }
+
+        _context.Products.RemoveRange(products);
+        await _context.SaveChangesAsync();
+        return Ok(new { Message = "All Records Has been Deleted!" });
+    }
     [HttpPost("/addProduct")]
     public IActionResult AddProduct([FromBody] ProductsDTO productsDTO)
     {
-        var products = new Products
+        if(productsDTO == null)
         {
-            ProductName = productsDTO.ProductName,
-            ProductCategory = productsDTO.ProductCategory,
-            Supplier = productsDTO.Supplier,
-            ExpirationDate = productsDTO.ExpirationDate
-        };
+            return BadRequest(new { Message = "Invalid Data " });
+        }
 
+        var products = _mapper.Map<Products>(productsDTO);     
         _context.Products.Add(products);
         _context.SaveChanges();
+        return Created("/api/products" + products.ProductID, new { Message = "Product Created!", Data = productsDTO });
+    }
 
-        var insertproductsDTO = new ProductsDTO
-        {         
-            ProductID = products.ProductID,
-            ProductCategory = products.ProductCategory,
-            ProductName = products.ProductName,
-            Supplier = products.Supplier,
-            ExpirationDate = products.ExpirationDate
-        };
-
-        return Created("/api/products" + products.ProductID, new { Message = "Product Created!", Data = insertproductsDTO });
+    [HttpPut("/updateProductById{id}")]
+    public async Task<IActionResult> UpdateByID ([FromBody] ProductsDTO productsDTO, long id)
+    {
+        var affectedRows = await _context.Products
+            .Where(i => i.ProductID == id).
+            ExecuteUpdateAsync(update => update.
+                           SetProperty(product => product.ProductName, productsDTO.ProductName)
+                          .SetProperty(product => product.ProductCategory, productsDTO.ProductCategory)
+                          .SetProperty(product => product.Supplier, productsDTO.Supplier)
+                          .SetProperty(product => product.ExpirationDate, productsDTO.ExpirationDate));
+                          
+        if (affectedRows == 0)
+        {
+            return NotFound(new { Message = "Product not Found !" });
+        }
+        return Ok(new { Message = "Product has been edited!" });
     }
 }

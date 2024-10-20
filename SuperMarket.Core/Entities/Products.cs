@@ -12,8 +12,10 @@ namespace SuperMarket.Core.Entities
     {
         [Key]
         public long ProductID { get; set; }
+        [MaxLength(500)]
         public string ProductName { get; set; }
         public DateTime ExpirationDate { get; set; }
+        [MaxLength (500)]
         public string Supplier { get; set; }
         public ProductCategoryEnum ProductCategory { get; set; }
     }
