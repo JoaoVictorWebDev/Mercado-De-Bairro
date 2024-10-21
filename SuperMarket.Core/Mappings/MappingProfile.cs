@@ -15,6 +15,9 @@ namespace SuperMarket.Core.Mappings
         {
             CreateMap<ProductsDTO, Products>();
             CreateMap<Products, ProductsDTO>();
+
+            CreateMap<Employee, EmployeeDTO>();
+            CreateMap<EmployeeDTO, Employee >();
         }
     }
 }
