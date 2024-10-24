@@ -65,7 +65,7 @@ dotnet ef database update
 ````
 ## Project Structure
 Here’s an overview of the project structure:
-
+```plaintext
 SuperMarket.API/
 ├── SuperMarket.Core/
 │   ├── Domain/
