@@ -6,9 +6,25 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="NovaPasta1\**" />
+    <Compile Remove="NovaPasta2\**" />
+    <Compile Remove="NovaPasta\**" />
+    <Compile Remove="Services\**" />
+    <EmbeddedResource Remove="NovaPasta1\**" />
+    <EmbeddedResource Remove="NovaPasta2\**" />
+    <EmbeddedResource Remove="NovaPasta\**" />
+    <EmbeddedResource Remove="Services\**" />
+    <None Remove="NovaPasta1\**" />
+    <None Remove="NovaPasta2\**" />
+    <None Remove="NovaPasta\**" />
+    <None Remove="Services\**" />
+  </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interface\" />
+    <Compile Remove="Domain\DTO\AddressResponseDTO.cs" />
+    <Compile Remove="Entities\AddressResponse.cs" />
+    <Compile Remove="Interface\IViaCepService.cs" />
   </ItemGroup>
 
   <ItemGroup>

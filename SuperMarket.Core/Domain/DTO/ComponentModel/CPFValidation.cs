@@ -12,7 +12,8 @@ namespace SuperMarket.Core.Domain.DTO.ComponentModel
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             var cpf = value as string;
-            if (!IsValid(cpf))
+
+            if (!isValidCPF(cpf))
             {
                 return new ValidationResult("CPF Inválido");
             }
@@ -34,11 +35,10 @@ namespace SuperMarket.Core.Domain.DTO.ComponentModel
                 return false;
             }
 
-            var firstDigit = CalculateCpfDigit(cpf.Substring(0, 9));
-            var secondDigit = CalculateCpfDigit(cpf.Substring(0, 10));
+            var firstDigit = CalculateCPFDigit(cpf.Substring(0, 9));
+            var secondDigit = CalculateCPFDigit(cpf.Substring(0, 10));
             return cpf.EndsWith($"{firstDigit}{secondDigit}");
         }
-
         private int CalculateCPFDigit(string cpf)
         {
             var sum = 0;
@@ -51,3 +51,4 @@ namespace SuperMarket.Core.Domain.DTO.ComponentModel
             return remainder < 2 ? 0 : 11 - remainder;
         }
     }
+}

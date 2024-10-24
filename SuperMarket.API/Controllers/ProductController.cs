@@ -21,7 +21,7 @@ public class ProductController : ControllerBase
         _mapper = mapper;
     }
     [HttpGet("/allProducts")]
-    public IActionResult GetAll() 
+    public IActionResult GetAllProducts() 
     {
         var products = _context.Products.ToList();
         var productsDTO = _mapper.Map<List<ProductsDTO>>(products);

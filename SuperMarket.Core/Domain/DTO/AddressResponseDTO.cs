@@ -5,17 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SuperMarket.Core.Entities
+namespace SuperMarket.Core.Domain.DTO
 {
-    public class Employee
+    public class AddressResponseDTO
     {
-        public long Id { get; set; }
-        public string Name { get; set; }
-        public string Role { get; set; }
-
-        public string City { get; set;}
-        public decimal Salary { get; set; }
-        public string CPF { get; set; }
+        [MaxLength(255)]
         public string PostalCode { get; set; }
         [MaxLength(255)]
         public string PublicPlace { get; set; }
@@ -29,7 +23,5 @@ namespace SuperMarket.Core.Entities
         public string region { get; set; }
         [MaxLength(2)]
         public string ddd { get; set; }
-
-
     }
 }
