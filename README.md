@@ -60,7 +60,9 @@ Before running the project, configure your database connection string in the `ap
 }
 ````
 After configuring the connection string, apply the migrations to create the database:
+```bash
 dotnet ef database update
+````
 ## Project Structure
 Here’s an overview of the project structure:
 
