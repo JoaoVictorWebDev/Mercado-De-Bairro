@@ -76,5 +76,9 @@ SuperMarket.API/
 │   ├── Repositories/
 │   └── Mappings/
 └── SuperMarket.Tests/
-
-
+```
+## Main Components
+- **DTOs (Data Transfer Objects): Used for transferring data between system layers**.
+- **Repositories: Handle data access logic.**
+- **Mappings: Uses AutoMapper to map entities to DTOs.**
+- **Services: Contain the business logic of the application.**
