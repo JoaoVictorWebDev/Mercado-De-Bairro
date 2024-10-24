@@ -58,10 +58,9 @@ Before running the project, configure your database connection string in the `ap
     "DefaultConnection": "Server=your_server;Database=SuperMarketDB;User Id=your_user;Password=your_password;"
   }
 }
-
+````
 After configuring the connection string, apply the migrations to create the database:
-
 dotnet ef database update
-##Project Structure
+## Project Structure
 Here’s an overview of the project structure:
 
