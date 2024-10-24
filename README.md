@@ -66,3 +66,15 @@ dotnet ef database update
 ## Project Structure
 Here’s an overview of the project structure:
 
+SuperMarket.API/
+├── SuperMarket.Core/
+│   ├── Domain/
+│   ├── DTO/
+│   └── Services/
+├── SuperMarket.Data/
+│   ├── Contexts/
+│   ├── Repositories/
+│   └── Mappings/
+└── SuperMarket.Tests/
+
+
