@@ -95,17 +95,21 @@ CRUD operations for products.
 Below are some of the main API endpoints:
 
 ## Employees
+```plaintext
 GET /api/employees - Retrieve all employees.
 GET /api/employees/{id} - Retrieve a specific employee.
 POST /api/employees - Add a new employee.
 PUT /api/employees/{id} - Update an existing employee.
 DELETE /api/employees/{id} - Delete an employee.
+```
 ## Products
+```plaintext
 GET /api/products - Retrieve all products.
 GET /api/products/{id} - Retrieve a specific product.
 POST /api/products - Add a new product.
 PUT /api/products/{id} - Update an existing product.
 DELETE /api/products/{id} - Delete a product.
+```
 ## Usage Example
 Here’s an example of how to create a new employee using cURL:
 ```bash
