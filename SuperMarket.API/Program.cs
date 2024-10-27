@@ -3,6 +3,7 @@ using SuperMarket.Core.Mappings;
 using SuperMarket.Data.Contexts;
 using SuperMarket.Core.Interface;
 using SuperMarket.Data.Repositories;
+using SuperMarket.Core.Service;
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -14,6 +15,7 @@ builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseNpgsql
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

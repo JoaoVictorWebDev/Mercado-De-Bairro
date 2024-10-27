@@ -1,30 +1,35 @@
-﻿using System;
+﻿using SuperMarket.Core.Handler;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SuperMarket.Core.Domain.DTO.ComponentModel
+namespace SuperMarket.Core.Validators
 {
-    public class CPFValidaton : ValidationAttribute
+    public class CPFValidator: ValidationAttribute
     {
-        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             var cpf = value as string;
 
-            if (!isValidCPF(cpf))
+            if (string.IsNullOrEmpty(cpf))
             {
-                return new ValidationResult("CPF Inválido");
+                return new ValidationResult("CPF não pode ser nulo ou vazio.");
+            }
+
+            cpf = new string(cpf.Where(char.IsDigit).ToArray());
+            if (!IsValidCPF(cpf))
+            {
+                return new ValidationResult("CPF inválido.");
             }
 
             return ValidationResult.Success;
         }
 
-        private bool isValidCPF(string cpf)
+        private bool IsValidCPF(string cpf)
         {
-            cpf = new string(cpf.Where(char.IsDigit).ToArray());
-
             if (cpf.Length != 11)
             {
                 return false;
@@ -32,13 +37,15 @@ namespace SuperMarket.Core.Domain.DTO.ComponentModel
 
             if (cpf.Distinct().Count() == 1)
             {
-                return false;
+                return false; 
             }
 
             var firstDigit = CalculateCPFDigit(cpf.Substring(0, 9));
             var secondDigit = CalculateCPFDigit(cpf.Substring(0, 10));
+
             return cpf.EndsWith($"{firstDigit}{secondDigit}");
         }
+
         private int CalculateCPFDigit(string cpf)
         {
             var sum = 0;

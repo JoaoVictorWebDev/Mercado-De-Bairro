@@ -10,7 +10,11 @@ namespace SuperMarket.Core.Interface
 {
     public interface IEmployeeRepository
     {
-        Task AddEmployeeAsync(Employee employee);
+        Task<EmployeeDTO>AddEmployeeAsync(Employee employee);
         Task <List<EmployeeDTO>> GetAllEmployeesAsync();
+        Task<Employee> GetEmployeesByIdAsync(long id);
+        Task<EmployeeDTO> updateEmployeeByIDAsync(long id, EmployeeDTO employeeDTO);
+        Task<EmployeeDTO> DeleteByIDAsync(long id);
+
     }
 }

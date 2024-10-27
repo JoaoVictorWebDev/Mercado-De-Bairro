@@ -12,13 +12,19 @@ namespace SuperMarket.API.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IEmployeeService _employeeService;
 
-
-        public EmployeeController(IMapper mapper, IEmployeeRepository employeeRepository)
+        public EmployeeController(IMapper mapper, IEmployeeService employeeService)
         {
             _mapper = mapper;
-            _employeeRepository = employeeRepository;
+            _employeeService = employeeService;
+        }
+
+        [HttpGet("/getEmployeeById{id}")]
+        public async Task<IActionResult> GetEmployeeById(long id)
+        {
+            var getEmployeeById = _employeeService.GetEmployeesByIdAsync(id);
+            return Ok(new { Message = $"Employee Found With {id} !", Data = getEmployeeById });
         }
 
         [HttpPost("/addEmployee")]
@@ -29,16 +35,29 @@ namespace SuperMarket.API.Controllers
                 return BadRequest(new { Message = "Invalid Data " });
             }
 
-            var employeeInstance = _mapper.Map<Employee>(employeeDTO);
-            await _employeeRepository.AddEmployeeAsync(employeeInstance);
-            return Created("/api/controller" + employeeInstance.Id, new { Message = "Employee Created!", Data = employeeInstance });
+            var addedEmployeeDTO = await _employeeService.AddEmployeeAsync(employeeDTO);
+            return Ok(new { Message = "Employee Created!", Data = addedEmployeeDTO });
         }
 
         [HttpGet("/allEmployees")]
         public async Task<IActionResult> GetAllEmployees()
         {
-            var GetAllEmployees = await _employeeRepository.GetAllEmployeesAsync();
+            var GetAllEmployees = await _employeeService.GetAllEmployeesAsync();
             return Ok(new { Message = "Employees Found", Data = GetAllEmployees });
+        }
+
+        [HttpPut("/updateEmployeeById{id}")]
+        public async Task<IActionResult> updateEmployeeByID(long id, EmployeeDTO employeeDTO)
+        {
+            var UpdateEmployee = await _employeeService.updateEmployeeByIDAsync(id, employeeDTO);
+            return Ok(new { Message = "Employe Updated!", Data = UpdateEmployee });
+        }
+
+        [HttpDelete("/deleteEmployeeByID{id}")]
+        public async Task<IActionResult> deleteEmployeeByID(long id)
+        {
+            var deleteEmployee = await _employeeService.DeleteByIDAsync(id);
+            return Ok(new { Message = "Employee Deleted !", Data = deleteEmployee });
         }
     }
 }

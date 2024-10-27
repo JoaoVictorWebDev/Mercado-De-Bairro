@@ -4,8 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SuperMarket.Core.Domain.DTO.ComponentModel;
-
+using SuperMarket.Core.Validators;
 namespace SuperMarket.Core.Domain.DTO
 {
     public class EmployeeDTO
@@ -24,7 +23,7 @@ namespace SuperMarket.Core.Domain.DTO
         public decimal Salary { get; set; }
 
         [MaxLength(11)]
-        [CPFValidaton]  
+        [CPFValidator]  
         public string CPF { get; set; }
 
         [MaxLength(8)]

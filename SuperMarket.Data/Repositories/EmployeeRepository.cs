@@ -10,6 +10,8 @@ using SuperMarket.Core.Interface;
 using AutoMapper;
 using SuperMarket.Core.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
+using SuperMarket.Core.Exceptions;
 
 namespace SuperMarket.Data.Repositories
 {
@@ -22,10 +24,16 @@ namespace SuperMarket.Data.Repositories
                 _mapper = mapper;
         }
         
-        public async Task AddEmployeeAsync(Employee employee)
+        public async Task<EmployeeDTO>AddEmployeeAsync(Employee employee)
         {
-            await _context.Employees.AddAsync(employee);
+            if (employee == null)
+            {
+            }
+
+            var employeeEntry = await _context.Employees.AddAsync(employee);
             await _context.SaveChangesAsync();
+            var employeeDTO = _mapper.Map<EmployeeDTO>(employee);
+            return employeeDTO;
         }
 
         public async Task<List<EmployeeDTO>> GetAllEmployeesAsync()
@@ -33,5 +41,42 @@ namespace SuperMarket.Data.Repositories
             var employeeAsync = await _context.Employees.ToListAsync();
             return _mapper.Map<List<EmployeeDTO>>(employeeAsync);
         }
+
+        public async Task<EmployeeDTO> updateEmployeeByIDAsync(long id, EmployeeDTO employeeDTO)
+        {
+            var employeeToUpdate = await _context.Employees
+                .FirstOrDefaultAsync(e => e.Id == id);
+            employeeToUpdate.Name = employeeDTO.Name;
+            employeeToUpdate.PostalCode = employeeDTO.PostalCode;
+            employeeToUpdate.PublicPlace = employeeDTO.PublicPlace;
+            employeeToUpdate.region = employeeDTO.Region;
+            employeeToUpdate.Role = employeeDTO.Role;
+            employeeToUpdate.Salary = employeeDTO.Salary;
+            employeeToUpdate.state = employeeDTO.State;
+            employeeToUpdate.uf = employeeDTO.Uf;
+            employeeToUpdate.CPF = employeeDTO.CPF;
+            await _context.SaveChangesAsync();
+            return _mapper.Map<EmployeeDTO>(employeeToUpdate);
+        }
+
+        public async Task<Employee> GetEmployeesByIdAsync(long id)
+        {
+            var getEmploeeysID = await _context.Employees.FindAsync(id);
+            return getEmploeeysID;
+        }
+
+        public async Task<EmployeeDTO> DeleteByIDAsync(long id)
+        {
+            var employeeToDelete = await _context.Employees
+                .FirstOrDefaultAsync(e => e.Id == id);
+            if (employeeToDelete == null)
+            {
+                throw new ResourceNotFoundException($"Employee with ID {id} can't be located.");
+            }
+            _context.Employees.Remove(employeeToDelete);
+            await _context.SaveChangesAsync(); // Correção: Chama SaveChangesAsync no contexto, não no DbSet
+            return _mapper.Map<EmployeeDTO>(employeeToDelete);
+        }
+
     }
 }
