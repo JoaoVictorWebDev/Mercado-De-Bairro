@@ -71,10 +71,16 @@ SuperMarket.API/
 │   ├── Domain/
 │   ├── DTO/
 │   └── Services/
+│   └── Mappings/
+│   └── Handler/
+│   └── Validators/
+│   └── Mappings/
+│   └── Exceptions/
+
 ├── SuperMarket.Data/
 │   ├── Contexts/
 │   ├── Repositories/
-│   └── Mappings/
+│   
 └── SuperMarket.Tests/
 ```
 ## Main Components
@@ -86,7 +92,7 @@ SuperMarket.API/
 Employee Management:
 
 Create, update, list, and delete employees.
-CPF validation using CPFValidationAttribute.
+CPF validation using ICPFHandler.
 Automatic address filling using the ViaCEP service.
 Product Management:
 
