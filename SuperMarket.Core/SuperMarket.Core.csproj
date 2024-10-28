@@ -24,7 +24,7 @@
   <ItemGroup>
     <Compile Remove="Domain\DTO\AddressResponseDTO.cs" />
     <Compile Remove="Entities\AddressResponse.cs" />
-    <Compile Remove="Interfaces\IViaCepService.cs" />
+    <Compile Remove="Interface\IViaCepService.cs" />
   </ItemGroup>
 
   <ItemGroup>

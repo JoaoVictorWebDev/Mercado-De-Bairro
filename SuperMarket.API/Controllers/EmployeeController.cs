@@ -59,6 +59,13 @@ namespace SuperMarket.API.Controllers
             var deleteEmployee = await _employeeService.DeleteByIDAsync(id);
             return Ok(new { Message = "Employee Deleted !", Data = deleteEmployee });
         }
+
+        [HttpDelete("/deleteAllEmployees")]
+        public async Task<IActionResult> deleteAllEmployees()
+        {
+            var deleteEmployee = await _employeeService.DeleteAllEmployees();
+            return Ok(new { Message = "All Employees Has been Deleted !", Data = deleteEmployee });
+        }
     }
 }
 

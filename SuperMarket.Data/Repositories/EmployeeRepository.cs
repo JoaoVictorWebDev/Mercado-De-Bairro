@@ -74,9 +74,16 @@ namespace SuperMarket.Data.Repositories
                 throw new ResourceNotFoundException($"Employee with ID {id} can't be located.");
             }
             _context.Employees.Remove(employeeToDelete);
-            await _context.SaveChangesAsync(); // Correção: Chama SaveChangesAsync no contexto, não no DbSet
+            await _context.SaveChangesAsync(); 
             return _mapper.Map<EmployeeDTO>(employeeToDelete);
         }
 
+        public async Task <List<EmployeeDTO>> DeleteAllEmployees()
+        {
+            var allEmployees = await _context.Employees.ToListAsync();  
+            _context.Employees.RemoveRange(allEmployees);
+            await _context.SaveChangesAsync();  
+            return _mapper.Map<List<EmployeeDTO>>(allEmployees);
+        }
     }
 }

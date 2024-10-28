@@ -9,6 +9,7 @@
   <ItemGroup>
     <Compile Include="Contexts\ApplicationDBContext.cs" />
     <Compile Include="Repositories\EmployeeRepository.cs" />
+    <Compile Include="Repositories\ProductRepository.cs" />
   </ItemGroup>
 
 	<ItemGroup>

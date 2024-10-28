@@ -75,5 +75,16 @@ namespace SuperMarket.Core.Service
             var DeleteByID = await _employeeRepository.DeleteByIDAsync(id);
             return DeleteByID;
         }
+
+        public async Task <List<EmployeeDTO>> DeleteAllEmployees()
+        {
+            var GetAllEmployees = await _employeeRepository.DeleteAllEmployees();
+
+            if (GetAllEmployees == null)
+            {
+                throw new ResourceNotFoundException("The list of Employees are null");
+            }
+            return _mapper.Map<List<EmployeeDTO>>(GetAllEmployees);
+        }
     }
 }
