@@ -5,6 +5,8 @@ using SuperMarket.Core.Interface;
 using SuperMarket.Data.Repositories;
 using SuperMarket.Core.Service;
 using SuperMarket.Core.Interfaces;
+using SuperMarket.Core.Strategies;
+using SuperMarket.Core.Structs;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
@@ -18,6 +20,13 @@ builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ExpirationDateAvailableStrategy>();
+builder.Services.AddScoped<StockAvaliableStrategy>();
+builder.Services.AddScoped<IProductStrategy, StockAvaliableStrategy>();
+builder.Services.AddScoped<IProductStrategy, ExpirationDateAvailableStrategy>();
+builder.Services.AddScoped<ProductService>();
+
+builder.Services.AddControllers();
 
 var app = builder.Build();
 

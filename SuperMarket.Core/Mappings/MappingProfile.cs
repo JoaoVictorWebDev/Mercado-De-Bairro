@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using SuperMarket.Core.Domain.DTO;
 using SuperMarket.Core.Entities;
+using SuperMarket.Core.Strategies;
 
 namespace SuperMarket.Core.Mappings
 {
@@ -13,11 +14,10 @@ namespace SuperMarket.Core.Mappings
     {
         public MappingProfile()
         {
-            CreateMap<ProductsDTO, Products>();
-            CreateMap<Products, ProductsDTO>();
-
-            CreateMap<Employee, EmployeeDTO>();
-            CreateMap<EmployeeDTO, Employee >();
+            CreateMap<ProductsDTO, Products>().ReverseMap();
+            CreateMap<Products, ProductsDTO>().ReverseMap();
+            CreateMap<Employee, EmployeeDTO>().ReverseMap();
+            CreateMap<EmployeeDTO, Employee>().ReverseMap();
         }
     }
 }

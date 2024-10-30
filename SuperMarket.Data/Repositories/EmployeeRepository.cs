@@ -11,7 +11,7 @@ using AutoMapper;
 using SuperMarket.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
-using SuperMarket.Core.Exceptions;
+using SuperMarket.Core.Structs;
 
 namespace SuperMarket.Data.Repositories
 {
@@ -69,10 +69,6 @@ namespace SuperMarket.Data.Repositories
         {
             var employeeToDelete = await _context.Employees
                 .FirstOrDefaultAsync(e => e.Id == id);
-            if (employeeToDelete == null)
-            {
-                throw new ResourceNotFoundException($"Employee with ID {id} can't be located.");
-            }
             _context.Employees.Remove(employeeToDelete);
             await _context.SaveChangesAsync(); 
             return _mapper.Map<EmployeeDTO>(employeeToDelete);
@@ -81,7 +77,7 @@ namespace SuperMarket.Data.Repositories
         public async Task <List<EmployeeDTO>> DeleteAllEmployees()
         {
             var allEmployees = await _context.Employees.ToListAsync();  
-            _context.Employees.RemoveRange(allEmployees);
+           _context.Employees.RemoveRange(allEmployees);
             await _context.SaveChangesAsync();  
             return _mapper.Map<List<EmployeeDTO>>(allEmployees);
         }

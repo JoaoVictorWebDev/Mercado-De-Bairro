@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using SuperMarket.Core.Domain.DTO;
 using SuperMarket.Core.Entities;
-using SuperMarket.Core.Exceptions;
 using SuperMarket.Core.Interface;
+using SuperMarket.Core.Structs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,70 +21,77 @@ namespace SuperMarket.Core.Service
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<EmployeeDTO> AddEmployeeAsync(EmployeeDTO employeeDTO)
+        public async Task<ServiceResult<EmployeeDTO>> AddEmployeeAsync(EmployeeDTO employeeDTO)
         {
             if(employeeDTO == null)
             {
-                    throw new ResourceNotFoundException("Employee Cant be Null!");
+                return ServiceResult<EmployeeDTO>.Error("Product Not Found");
             }
             var addEmployeeDTO = _mapper.Map<Employee>(employeeDTO);
             await _employeeRepository.AddEmployeeAsync(addEmployeeDTO);
             return employeeDTO;
         }
 
-        public async Task<List<EmployeeDTO>> GetAllEmployeesAsync()
+        public async Task<ServiceResult<EmployeeDTO>> GetAllEmployeesAsync()
         {
             var getAllEmployees = await _employeeRepository.GetAllEmployeesAsync();
             if(getAllEmployees == null)
             {
-                throw new ResourceNotFoundException("Employees not found");
+                return ServiceResult<EmployeeDTO>.Error("Employee Not Found!");
             }
-            return getAllEmployees;
+            return _mapper.Map<EmployeeDTO>(getAllEmployees);
         }
 
-        public async Task <Employee> GetEmployeesByIdAsync(long id)
+        public async Task<ServiceResult<Employee>> GetEmployeesByIdAsync(long id)
         {
            var getEmployeeByID = await _employeeRepository.GetEmployeesByIdAsync(id);
             if(getEmployeeByID == null)
             {
-                throw new ResourceNotFoundException($"Employee with ID {id} Can't be Located!" );
+                return ServiceResult<Employee>.Error($"Employee With ID :{id} Not Found!");
             }
-            return getEmployeeByID; 
+            return _mapper.Map<Employee>(getEmployeeByID); 
         }
 
-        public async Task <EmployeeDTO> updateEmployeeByIDAsync(long id, EmployeeDTO employeeDTO)
+        public async Task <ServiceResult<EmployeeDTO>> updateEmployeeByIDAsync(long id, EmployeeDTO employeeDTO)
         {
             var existingEmployee = await _employeeRepository.GetEmployeesByIdAsync(id);
             if(existingEmployee == null)
             {
-                throw new ResourceNotFoundException($"Employee With ID {id} Can't be Located");
+                return ServiceResult<EmployeeDTO>.Error("Product Not Found");
             }
             var updateAsync = await _employeeRepository.updateEmployeeByIDAsync(id, employeeDTO);
             var updatedEmployeeDTO = _mapper.Map<EmployeeDTO>(updateAsync);
             return updatedEmployeeDTO;
         }
 
-        public async Task <EmployeeDTO> DeleteByIDAsync(long id)
+        public async Task<ServiceResult<EmployeeDTO>> DeleteByIDAsync(long id)
         {
             var GetIdFromEmployee = await _employeeRepository.GetEmployeesByIdAsync(id);
             if(GetIdFromEmployee == null)
             {
-                throw new ResourceNotFoundException($"Employee With ID {id} Can't be locate");
-            }
+                return ServiceResult<EmployeeDTO>.Error("Product Not Found");
 
+            }
             var DeleteByID = await _employeeRepository.DeleteByIDAsync(id);
             return DeleteByID;
         }
 
-        public async Task <List<EmployeeDTO>> DeleteAllEmployees()
+        public async Task<ServiceResult<EmployeeDTO>> DeleteAllEmployees()
         {
-            var GetAllEmployees = await _employeeRepository.DeleteAllEmployees();
+            try { 
+                var GetAllEmployees = await _employeeRepository.DeleteAllEmployees();
 
-            if (GetAllEmployees == null)
-            {
-                throw new ResourceNotFoundException("The list of Employees are null");
+                if (GetAllEmployees == null)
+                {
+                    ServiceResult<EmployeeDTO>.Error("Product Not Found!");
+                }
+                var deleted =  _mapper.Map<EmployeeDTO>(GetAllEmployees);
+                return ServiceResult<EmployeeDTO>.Success(deleted);
             }
-            return _mapper.Map<List<EmployeeDTO>>(GetAllEmployees);
+            catch (Exception ex)
+            {
+                return ServiceResult<EmployeeDTO>.Exception(ex);
+            }
         }
     }
 }

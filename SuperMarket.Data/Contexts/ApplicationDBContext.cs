@@ -11,5 +11,15 @@ namespace SuperMarket.Data.Contexts
 
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Products> Products { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Products>()
+                .HasKey(p => p.ProductID);
+            modelBuilder.Entity<Employee>()
+                .HasKey(e => e.Id);
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
