@@ -16,6 +16,8 @@ namespace SuperMarket.Core.Mappings
         {
             CreateMap<ProductsDTO, Products>().ReverseMap();
             CreateMap<Products, ProductsDTO>().ReverseMap();
+            CreateMap<User, UserDTO>();
+            CreateMap<UserDTO, User>();
             CreateMap<Employee, EmployeeDTO>().ReverseMap();
             CreateMap<EmployeeDTO, Employee>().ReverseMap();
         }

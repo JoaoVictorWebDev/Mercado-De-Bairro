@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SuperMarket.Core.Interface
+namespace SuperMarket.Core.Interface.Strategies
 {
     public interface IProductStrategy
     {
-        bool IsAvailable(ProductsDTO productDTO);
+        (bool isAvailable, string errorMessage) IsAvailable(ProductsDTO productsDTO);
     }
 }

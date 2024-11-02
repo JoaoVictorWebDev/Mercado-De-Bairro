@@ -23,10 +23,9 @@ namespace SuperMarket.Core.Domain.DTO
         public ProductCategoryEnum ProductCategory { get; set; }
         [DataType(DataType.Currency)]
         [Range(0.0, Double.MaxValue)]
-        public decimal Price { get; set; }
+        public Double Price { get; set; }
         [MaxLength(1000)]
         public String Description { get; set; }
-        public Double Discount { get; set; }
         public int Quantity { get; set; }
     }
 }   

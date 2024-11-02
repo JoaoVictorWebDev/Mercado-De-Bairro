@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using SuperMarket.Core.Domain.DTO;
 using SuperMarket.Core.Entities;
-using SuperMarket.Core.Interface;
+using SuperMarket.Core.Interface.Repositories;
+using SuperMarket.Core.Interface.Service;
 using SuperMarket.Core.Structs;
 using System;
 using System.Collections.Generic;

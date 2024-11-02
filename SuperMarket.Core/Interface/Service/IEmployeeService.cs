@@ -7,11 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SuperMarket.Core.Interface
+namespace SuperMarket.Core.Interface.Service
 {
     public interface IEmployeeService
     {
-        Task<ServiceResult<EmployeeDTO>>AddEmployeeAsync(EmployeeDTO employee);
+        Task<ServiceResult<EmployeeDTO>> AddEmployeeAsync(EmployeeDTO employee);
         Task<ServiceResult<EmployeeDTO>> GetAllEmployeesAsync();
         Task<ServiceResult<Employee>> GetEmployeesByIdAsync(long id);
         Task<ServiceResult<EmployeeDTO>> updateEmployeeByIDAsync(long id, EmployeeDTO employeeDTO);

@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SuperMarket.Core.Domain.DTO;
 using SuperMarket.Core.Entities;
-using SuperMarket.Core.Interface;
+using SuperMarket.Core.Interface.Service;
 using SuperMarket.Data.Contexts;
 
 namespace SuperMarket.API.Controllers
@@ -21,6 +22,7 @@ namespace SuperMarket.API.Controllers
         }
 
         [HttpGet("/getEmployeeById{id}")]
+        [Authorize]
         public async Task<IActionResult> GetEmployeeById(long id)
         {
             var getEmployeeById = _employeeService.GetEmployeesByIdAsync(id);
@@ -28,6 +30,8 @@ namespace SuperMarket.API.Controllers
         }
 
         [HttpPost("/addEmployee")]
+        [Authorize]
+
         public async Task<IActionResult> AddEmployee([FromBody]EmployeeDTO employeeDTO)
         {
             if (employeeDTO == null)
@@ -40,6 +44,7 @@ namespace SuperMarket.API.Controllers
         }
 
         [HttpGet("/allEmployees")]
+        [Authorize]
         public async Task<IActionResult> GetAllEmployees()
         {
             var GetAllEmployees = await _employeeService.GetAllEmployeesAsync();
@@ -47,6 +52,7 @@ namespace SuperMarket.API.Controllers
         }
 
         [HttpPut("/updateEmployeeById{id}")]
+        [Authorize]
         public async Task<IActionResult> updateEmployeeByID(long id, EmployeeDTO employeeDTO)
         {
             var UpdateEmployee = await _employeeService.updateEmployeeByIDAsync(id, employeeDTO);
@@ -54,6 +60,8 @@ namespace SuperMarket.API.Controllers
         }
 
         [HttpDelete("/deleteEmployeeByID{id}")]
+        [Authorize]
+
         public async Task<IActionResult> deleteEmployeeByID(long id)
         {
             var deleteEmployee = await _employeeService.DeleteByIDAsync(id);
@@ -61,6 +69,7 @@ namespace SuperMarket.API.Controllers
         }
 
         [HttpDelete("/deleteAllEmployees")]
+        [Authorize]
         public async Task<IActionResult> deleteAllEmployees()
         {
             var deleteEmployee = await _employeeService.DeleteAllEmployees();

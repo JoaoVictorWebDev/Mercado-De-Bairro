@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SuperMarket.Core.Domain.DTO;
 using SuperMarket.Core.Entities;
-using SuperMarket.Core.Interfaces;
+using SuperMarket.Core.Interface.Service;
 using SuperMarket.Core.Service;
 using SuperMarket.Data.Contexts;
 using System.Diagnostics.CodeAnalysis;

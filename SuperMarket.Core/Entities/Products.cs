@@ -16,9 +16,8 @@ namespace SuperMarket.Core.Entities
         public DateTime ExpirationDate { get; set; }
         public string Supplier { get; set; }
         public ProductCategoryEnum ProductCategory { get; set; }
-        public decimal Price { get; set; }
+        public Double Price { get; set; }
         public String Description { get; set; }
-        public Double Discount { get; set; }
         public int Quantity { get; set; }
     }
 }

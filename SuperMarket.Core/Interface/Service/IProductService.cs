@@ -8,15 +8,15 @@ using System.Text;
 using System.Threading.Tasks;
 using SuperMarket.Core.Structs;
 
-namespace SuperMarket.Core.Interfaces
+namespace SuperMarket.Core.Interface.Service
 {
     public interface IProductService
     {
         Task<ServiceResult<ProductsDTO>> AddProductAsync(ProductsDTO Products);
-        Task <List<ProductsDTO>> GetAllProductsAsync();
+        Task<List<ProductsDTO>> GetAllProductsAsync();
         Task<ServiceResult<ProductsDTO>> GetProcutsByIDAsync(long id);
         Task<ServiceResult<ProductsDTO>> updateProductsByIDAsync(long id, ProductsDTO productsDTO);
-        Task <ServiceResult<ProductsDTO>> DeleteByIDAsync(long id);
+        Task<ServiceResult<ProductsDTO>> DeleteByIDAsync(long id);
         Task<ServiceResult<ProductsDTO>> DeleteAllProducts();
     }
 }

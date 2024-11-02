@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 using SuperMarket.Core.Entities;
 using SuperMarket.Core.Structs;
 
-namespace SuperMarket.Core.Interfaces
+namespace SuperMarket.Core.Interface.Repositories
 {
     public interface IProductRepository
     {
         Task<ProductsDTO> AddProductsAsync(Products Product);
         Task<List<ProductsDTO>> GetAllProductsAsync();
         Task<ProductsDTO> GetProductsByIDAsync(long id);
-        Task <ProductsDTO> updateProductsByIDAsync(long id, ProductsDTO Products);
-        Task <ProductsDTO> DeleteProductsByIDAsync(long id);
+        Task<ProductsDTO> updateProductsByIDAsync(long id, ProductsDTO Products);
+        Task<ProductsDTO> DeleteProductsByIDAsync(long id);
         Task<List<ProductsDTO>> DeleteAllProducts();
     }
 }

@@ -1,17 +1,16 @@
-﻿using SuperMarket.Core.Interface;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SuperMarket.Data.Contexts;
 using SuperMarket.Core.Domain.DTO;
-using SuperMarket.Core.Interface;
 using AutoMapper;
 using SuperMarket.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
 using SuperMarket.Core.Structs;
+using SuperMarket.Core.Interface.Repositories;
 
 namespace SuperMarket.Data.Repositories
 {

@@ -8,7 +8,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using SuperMarket.Core.Domain.DTO;
 using SuperMarket.Core.Entities;
-using SuperMarket.Core.Interfaces;
+using SuperMarket.Core.Interface.Repositories;
 using SuperMarket.Core.Structs;
 using SuperMarket.Data.Contexts;
 
@@ -52,7 +52,6 @@ namespace SuperMarket.Data.Repositories
             ProductToUpdate.Price = productsDTO.Price;
             ProductToUpdate.Supplier = productsDTO.Supplier;
             ProductToUpdate.ProductCategory = productsDTO.ProductCategory;
-            ProductToUpdate.Discount = productsDTO.Discount;
             ProductToUpdate.Description = productsDTO.Description;
             ProductToUpdate.ExpirationDate = productsDTO.ExpirationDate;
             await _context.SaveChangesAsync();

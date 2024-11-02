@@ -6,12 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 using SuperMarket.Core.Domain.DTO;
 
-namespace SuperMarket.Core.Interface
+namespace SuperMarket.Core.Interface.Repositories
 {
     public interface IEmployeeRepository
     {
-        Task<EmployeeDTO>AddEmployeeAsync(Employee employee);
-        Task <List<EmployeeDTO>> GetAllEmployeesAsync();
+        Task<EmployeeDTO> AddEmployeeAsync(Employee employee);
+        Task<List<EmployeeDTO>> GetAllEmployeesAsync();
         Task<Employee> GetEmployeesByIdAsync(long id);
         Task<EmployeeDTO> updateEmployeeByIDAsync(long id, EmployeeDTO employeeDTO);
         Task<EmployeeDTO> DeleteByIDAsync(long id);

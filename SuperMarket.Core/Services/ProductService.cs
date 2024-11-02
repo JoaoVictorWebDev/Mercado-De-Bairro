@@ -1,52 +1,65 @@
 ﻿using AutoMapper;
 using SuperMarket.Core.Domain.DTO;
 using SuperMarket.Core.Entities;
-using SuperMarket.Core.Interface;
-using SuperMarket.Core.Interfaces;
+using SuperMarket.Core.Interface.Repositories;
+using SuperMarket.Core.Interface.Service;
+using SuperMarket.Core.Interface.Strategies;
 using SuperMarket.Core.Strategies;
 using SuperMarket.Core.Structs;
 using System;
+using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SuperMarket.Core.Service
 {
     public class ProductService : IProductService
     {
+
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
-        private readonly StockAvaliableStrategy _stockAvaliableStrategy;
-        private readonly ExpirationDateAvailableStrategy _expirationDateAvailableStrategy;
-        public ProductService(IProductRepository productRepository, IMapper mapper, StockAvaliableStrategy stockAvaliableStrategy, ExpirationDateAvailableStrategy expirationDateAvailableStrategy)
+        private readonly IEnumerable<IProductStrategy> _productStrategies;
+        public ProductService(IProductRepository productRepository, IMapper mapper, IEnumerable<IProductStrategy> productStrategies)
         {
             _productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _expirationDateAvailableStrategy = expirationDateAvailableStrategy;
-            _stockAvaliableStrategy = stockAvaliableStrategy;
+            _productStrategies = productStrategies ?? throw new ArgumentNullException(nameof(productStrategies));
         }
-
-        private bool IsProductAvailable(ProductsDTO productsDTO)
+        public ServiceResult<bool> IsProductAvailable(ProductsDTO productsDTO)
         {
-            bool isExpirationAvailable = _expirationDateAvailableStrategy.IsAvailable(productsDTO);
-            bool isStockAvailable = _stockAvaliableStrategy.IsAvailable(productsDTO);
-            return isExpirationAvailable && isStockAvailable;
+            var stockResult = _productStrategies.OfType<StockAvaliableStrategy>()
+             .Select(strategy => strategy.IsAvailable(productsDTO))
+             .ToList();
+            
+            if(stockResult.Any(result => !result.isAvailable))
+            {
+                return ServiceResult<bool>.Error("Product  is out of Stock");
+            }
+            return true;
         }
 
         public async Task<ServiceResult<ProductsDTO>> AddProductAsync(ProductsDTO productsDTO)
         {
-            try {
+            try
+            {
                 if (productsDTO == null)
                 {
                     return ServiceResult<ProductsDTO>.Error("Products Canno't be Empty!");
                 }
-
+                var availabiltyResult = IsProductAvailable(productsDTO);
+                if (!availabiltyResult.IsSuccess)
+                {
+                    return ServiceResult<ProductsDTO>.Error(availabiltyResult.ErrorMessage);
+                }
                 var productEntity = _mapper.Map<Products>(productsDTO);
                 var result = await _productRepository.AddProductsAsync(productEntity);
                 var createdProductDTO = _mapper.Map<ProductsDTO>(result);
-                return createdProductDTO;
-            } catch (Exception ex)
+                return ServiceResult<ProductsDTO>.Success(createdProductDTO);
+            }
+            catch (Exception ex)
             {
-                return  ServiceResult<ProductsDTO>.Exception(ex);
+                return ServiceResult<ProductsDTO>.Exception(ex);
             }
         }
         public async Task<List<ProductsDTO>> GetAllProductsAsync()
@@ -68,10 +81,10 @@ namespace SuperMarket.Core.Service
                     return ServiceResult<ProductsDTO>.Error("Product Not Found");
                 }
 
-                if (!IsProductAvailable(productsByID))
-                {
-                    return ServiceResult<ProductsDTO>.Error("Product Not Available in Stock");
-                }
+                //if (!IsProductAvailable(productsByID))
+                //{
+                //    return ServiceResult<ProductsDTO>.Error("Product Not Available in Stock");
+                //}
 
                 var productDTO = _mapper.Map<ProductsDTO>(productsByID);
                 return ServiceResult<ProductsDTO>.Success(productDTO);
