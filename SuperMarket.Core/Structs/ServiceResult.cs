@@ -6,7 +6,7 @@ namespace SuperMarket.Core.Structs
     {
         public T? Data { get; }
         public string? ErrorMessage { get; } 
-        public bool IsSuccess => ErrorMessage == null;
+        public bool IsSuccess =>    ErrorMessage == null;
 
         public ServiceResult(T data)
         {

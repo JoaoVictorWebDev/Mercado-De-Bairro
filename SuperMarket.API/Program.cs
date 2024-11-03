@@ -16,41 +16,47 @@ using SuperMarket.API.JWT.Interface;
 using SuperMarket.API.JWT.Config;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configurações de serviços
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
-        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
         Scheme = "Bearer"
     });
 
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
-        { 
-        new OpenApiSecurityScheme
         {
-            Reference = new OpenApiReference
+            new OpenApiSecurityScheme
             {
-                Type = ReferenceType.SecurityScheme,
-                Id = "Bearer"
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                },
+                Scheme = "Bearer",
+                Name = "Authorization",
+                In = ParameterLocation.Header,
             },
-
-            Scheme = "Bearer",
-            Name = "Authorization",
-            In = ParameterLocation.Header,
-        },
-        new List<string>()
+            new List<string>()
         }
     });
 });
+
+// Configuração do DbContext
 builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseNpgsql(builder.Configuration
     .GetConnectionString("WebApiDatabase"), x => x.MigrationsAssembly("SuperMarket.API").ToString()).EnableSensitiveDataLogging());
 
+// Mapeamento
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+// Registro de serviços
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IProductService, ProductService>();
@@ -60,14 +66,20 @@ builder.Services.AddScoped<StockAvaliableStrategy>();
 builder.Services.AddScoped<IProductStrategy, StockAvaliableStrategy>();
 builder.Services.AddScoped<IProductStrategy, ExpirationDateAvailableStrategy>();
 
-//builder.Services.AddScoped<IUserService, UserService>();
-//builder.Services.AddScoped<IUserRepository, UserRepository>();
-//builder.Services.AddScoped<TokenService>();
-builder.Services.AddCors();
-builder.Services.AddControllers();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
 
+// Configuração de autenticação JWT
 var tokenKey = builder.Configuration.GetValue<string>("JwtSettings:TokenKey");
-var key = Encoding.ASCII.GetBytes(SuperMarket.Core.Key.Key.Secret);
+var key = Encoding.ASCII.GetBytes(tokenKey);
+
 builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -81,29 +93,32 @@ builder.Services.AddAuthentication(x =>
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(key),
         ValidateIssuer = false,
-        ValidateAudience = false
+        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+        ValidateAudience = false,
+        ValidAudience = builder.Configuration["JwtSettings:Audience"],
+        ValidateLifetime = true
     };
 });
 
+// Configuração de serviços adicionais
 builder.Services.AddSingleton<ITokenRefresh>(x =>
     new TokenRefresher(key, x.GetService<IJwtAuthenticationManager>()));
 builder.Services.AddSingleton<IRefreshTokenGenerator, RefreshTokenGenerator>();
 builder.Services.AddSingleton<IJwtAuthenticationManager>(x =>
     new JwtAuthenticationManager(tokenKey, x.GetService<IRefreshTokenGenerator>()));
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configuração do pipeline de requisições
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
 app.UseAuthentication();
-
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();

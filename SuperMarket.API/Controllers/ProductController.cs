@@ -23,7 +23,8 @@ public class ProductController : ControllerBase
         _productService = productService;
         _mapper = mapper;
     }
-    [Authorize]
+    [Authorize(Roles = "admin")]
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [HttpGet("/allProducts")]
     public async Task<IActionResult> GetAllProducts()
     {
