@@ -5,7 +5,6 @@ using SuperMarket.Data.Repositories;
 using SuperMarket.Core.Service;
 using SuperMarket.Core.Strategies;
 using SuperMarket.Core.Structs;
-using SuperMarket.Core.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -13,6 +12,8 @@ using Microsoft.OpenApi.Models;
 using SuperMarket.Core.Interface.Service;
 using SuperMarket.Core.Interface.Repositories;
 using SuperMarket.Core.Interface.Strategies;
+using SuperMarket.API.JWT.Interface;
+using SuperMarket.API.JWT.Config;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -47,7 +48,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseNpgsql(builder.Configuration
-    .GetConnectionString("WebApiDatabase"), x => x.MigrationsAssembly("SuperMarket.API").ToString()));
+    .GetConnectionString("WebApiDatabase"), x => x.MigrationsAssembly("SuperMarket.API").ToString()).EnableSensitiveDataLogging());
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
@@ -58,12 +59,14 @@ builder.Services.AddScoped<ExpirationDateAvailableStrategy>();
 builder.Services.AddScoped<StockAvaliableStrategy>();
 builder.Services.AddScoped<IProductStrategy, StockAvaliableStrategy>();
 builder.Services.AddScoped<IProductStrategy, ExpirationDateAvailableStrategy>();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<TokenService>();
+
+//builder.Services.AddScoped<IUserService, UserService>();
+//builder.Services.AddScoped<IUserRepository, UserRepository>();
+//builder.Services.AddScoped<TokenService>();
 builder.Services.AddCors();
 builder.Services.AddControllers();
 
+var tokenKey = builder.Configuration.GetValue<string>("JwtSettings:TokenKey");
 var key = Encoding.ASCII.GetBytes(SuperMarket.Core.Key.Key.Secret);
 builder.Services.AddAuthentication(x =>
 {
@@ -82,7 +85,11 @@ builder.Services.AddAuthentication(x =>
     };
 });
 
-
+builder.Services.AddSingleton<ITokenRefresh>(x =>
+    new TokenRefresher(key, x.GetService<IJwtAuthenticationManager>()));
+builder.Services.AddSingleton<IRefreshTokenGenerator, RefreshTokenGenerator>();
+builder.Services.AddSingleton<IJwtAuthenticationManager>(x =>
+    new JwtAuthenticationManager(tokenKey, x.GetService<IRefreshTokenGenerator>()));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
